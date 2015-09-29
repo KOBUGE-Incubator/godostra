@@ -80,3 +80,4 @@ func _input(event):
 			get_node("camera").set_offset(Vector2(get_node("camera").get_offset()[0],get_node("camera").get_offset()[1]+tile_size))
 		elif event.pos.y < tile_size/2 && !event.is_echo() && get_node("camera").get_offset()[1] > 0:
 			get_node("camera").set_offset(Vector2(get_node("camera").get_offset()[0],get_node("camera").get_offset()[1]-tile_size))
+	

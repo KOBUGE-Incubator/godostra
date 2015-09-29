@@ -12,6 +12,13 @@ func _ready():
 	set_fixed_process(true)
 	
 func _fixed_process(delta):
+	if selected:
+		if !get_node("selection").is_visible():
+				get_node("selection").show()
+	else:
+		if get_node("selection").is_visible():
+				get_node("selection").hide()
+
 	if walk.size() > 0:
 		if moveAmount > 0:
 			move(Vector2(int(walk[step][0])*2,int(walk[step][1])*2))
@@ -28,9 +35,10 @@ func _fixed_process(delta):
 
 
 func _on_clickable_pressed():
+	if !Input.is_action_pressed("btn_l_ctrl"):
+		for unit in get_tree().get_nodes_in_group("units"):
+			unit.selected = false
 	if selected:
 		selected = false
-		get_node("selection").hide()
 	else:
 		selected = true
-		get_node("selection").show()
