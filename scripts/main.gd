@@ -20,15 +20,20 @@ func _ready():
 	#OS.set_window_maximized(true)
 	
 	#add initial units
-	var unit = p_unit_1.instance()
-	unit.cell = [0,0]
-	add_child(unit)
+	add_unit(0,0)
+	add_unit(7,3)
+	add_unit(7,7)
 	
 	#set camera sizes
 	get_node("camera").set_limit(MARGIN_RIGHT, map_size_x*tile_size)
 	get_node("camera").set_limit(MARGIN_BOTTOM, map_size_y*tile_size)
 	
 	set_process_input(true)
+	
+func add_unit(x,y):
+	var unit = p_unit_1.instance()
+	unit.cell = [x,y]
+	add_child(unit)
 	
 func draw_tiles():
 	var tile
