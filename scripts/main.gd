@@ -61,19 +61,20 @@ func draw_tiles():
 			
 func _input(event):
 	if event.is_pressed():
-		mouse_x = floor(event.pos[0]/tile_size)
-		mouse_y = floor(event.pos[1]/tile_size)
+		mouse_x = floor((get_node("camera").get_offset()[0]+event.pos[0])/tile_size)
+		mouse_y = floor((get_node("camera").get_offset()[1]+event.pos[1])/tile_size)
 		print("mouse click cell: ",mouse_x,",",mouse_y)
 		for unit in get_tree().get_nodes_in_group("units"):
 			var path = pathFinder.findPathInMap(map, unit.cell, [mouse_x, mouse_y])
 			if path != null:
 				unit.walk = path
 	else:
-		if event.pos.x > OS.get_window_size().x-tile_size/2 && !event.is_echo():
+		#camera nav
+		if event.pos.x > OS.get_window_size().x-tile_size/2 && !event.is_echo() && get_node("camera").get_offset()[0] < (map_size_x*32)-OS.get_window_size().x:
 			get_node("camera").set_offset(Vector2(get_node("camera").get_offset()[0]+tile_size,get_node("camera").get_offset()[1]))
-		elif event.pos.x < tile_size/2 && !event.is_echo():
+		elif event.pos.x < tile_size/2 && !event.is_echo() && get_node("camera").get_offset()[0] > 0:
 			get_node("camera").set_offset(Vector2(get_node("camera").get_offset()[0]-tile_size,get_node("camera").get_offset()[1]))
-		elif event.pos.y > OS.get_window_size().y-tile_size/2 && !event.is_echo():
+		elif event.pos.y > OS.get_window_size().y-tile_size/2 && !event.is_echo() && get_node("camera").get_offset()[1] < (map_size_y*32)-OS.get_window_size().y:
 			get_node("camera").set_offset(Vector2(get_node("camera").get_offset()[0],get_node("camera").get_offset()[1]+tile_size))
-		elif event.pos.y < tile_size/2 && !event.is_echo():
+		elif event.pos.y < tile_size/2 && !event.is_echo() && get_node("camera").get_offset()[1] > 0:
 			get_node("camera").set_offset(Vector2(get_node("camera").get_offset()[0],get_node("camera").get_offset()[1]-tile_size))
