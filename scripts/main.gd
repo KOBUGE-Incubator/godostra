@@ -17,12 +17,13 @@ var pathFinder = preload("res://scripts/pathFinder.gd").new()
 
 func _ready():
 	draw_tiles()
+	print("To select units press Left CTRL to toggle selection")
 	#OS.set_window_maximized(true)
 	
 	#add initial units
-	add_unit(0,0)
-	add_unit(7,3)
-	add_unit(7,7)
+	add_unit(0,3)
+	add_unit(7,4)
+	add_unit(7,8)
 	
 	#set camera sizes
 	get_node("camera").set_limit(MARGIN_RIGHT, map_size_x*tile_size)
@@ -38,11 +39,11 @@ func add_unit(x,y):
 func draw_tiles():
 	var tile
 	file = File.new()
-	file.open("res://maps/map_2.csv",1)
+	file.open("res://maps/map_3.csv",1)
 	map_size_x = file.get_csv_line().size()
 	
 	#FIX this one pls
-	file.open("res://maps/map_2.csv",1)
+	file.open("res://maps/map_3.csv",1)
 	map_size_y = file.get_as_text().split(",").size()/map_size_x+1
 	
 	for i in range(map_size_y):
@@ -60,15 +61,17 @@ func draw_tiles():
 			add_child(tile)
 			
 func _input(event):
-	if event.is_pressed():
+	if event.type == InputEvent.MOUSE_BUTTON && event.button_index == 1 && !Input.is_action_pressed("btn_l_ctrl"):
 		mouse_x = floor((get_node("camera").get_offset()[0]+event.pos[0])/tile_size)
 		mouse_y = floor((get_node("camera").get_offset()[1]+event.pos[1])/tile_size)
 		print("mouse click cell: ",mouse_x,",",mouse_y)
 		for unit in get_tree().get_nodes_in_group("units"):
-			var path = pathFinder.findPathInMap(map, unit.cell, [mouse_x, mouse_y])
-			if path != null:
-				unit.walk = path
-	else:
+			if unit.selected:
+				var path = pathFinder.findPathInMap(map, unit.cell, [mouse_x, mouse_y])
+				if path != null:
+					unit.walk = path
+		
+	elif event.type == InputEvent.MOUSE_MOTION:
 		#camera nav
 		if event.pos.x > OS.get_window_size().x-tile_size/2 && !event.is_echo() && get_node("camera").get_offset()[0] < (map_size_x*32)-OS.get_window_size().x:
 			get_node("camera").set_offset(Vector2(get_node("camera").get_offset()[0]+tile_size,get_node("camera").get_offset()[1]))
