@@ -17,7 +17,6 @@ var pathFinder = preload("res://scripts/pathFinder.gd").new()
 
 func _ready():
 	draw_tiles()
-	print("To select units press Left CTRL to toggle selection")
 	#OS.set_window_maximized(true)
 	
 	#add initial units
@@ -61,7 +60,7 @@ func draw_tiles():
 			add_child(tile)
 			
 func _input(event):
-	if event.type == InputEvent.MOUSE_BUTTON && event.button_index == 1 && !Input.is_action_pressed("btn_l_ctrl"):
+	if event.type == InputEvent.MOUSE_BUTTON && event.button_index == 2:
 		mouse_x = floor((get_node("camera").get_offset()[0]+event.pos[0])/tile_size)
 		mouse_y = floor((get_node("camera").get_offset()[1]+event.pos[1])/tile_size)
 		print("mouse click cell: ",mouse_x,",",mouse_y)

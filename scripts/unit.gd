@@ -28,10 +28,9 @@ func _fixed_process(delta):
 
 
 func _on_clickable_pressed():
-	if Input.is_action_pressed("btn_l_ctrl"):
-		if selected:
-			selected = false
-			get_node("selection").hide()
-		else:
-			selected = true
-			get_node("selection").show()
+	if selected:
+		selected = false
+		get_node("selection").hide()
+	else:
+		selected = true
+		get_node("selection").show()
