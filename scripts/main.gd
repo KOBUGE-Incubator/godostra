@@ -8,10 +8,12 @@ var tile_size = 32
 var mouse_x = 0
 var mouse_y = 0
 
-var p_dirt = load("res://scenes/tiles/dirt.xml")
-var p_water = load("res://scenes/tiles/water.xml")
+var p_dirt = preload("res://scenes/tiles/dirt.xml")
+var p_water = preload("res://scenes/tiles/water.xml")
 
-var p_unit_1 = load("res://scenes/units/unit_1.xml")
+var p_unit_1 = preload("res://scenes/units/unit_1.xml")
+
+var pathFinder = preload("res://scripts/pathFinder.gd").new()
 
 func _ready():
 	draw_tiles()
@@ -58,7 +60,9 @@ func _input(event):
 		mouse_y = floor(event.pos[1]/tile_size)
 		print("mouse click cell: ",mouse_x,",",mouse_y)
 		for unit in get_tree().get_nodes_in_group("units"):
-			print("moveme")
+			var path = pathFinder.findPathInMap(map, unit.cell, [mouse_x, mouse_y])
+			if path != null:
+				unit.walk = path
 	else:
 		if event.pos.x > OS.get_window_size().x-tile_size/2 && !event.is_echo():
 			get_node("camera").set_offset(Vector2(get_node("camera").get_offset()[0]+tile_size,get_node("camera").get_offset()[1]))

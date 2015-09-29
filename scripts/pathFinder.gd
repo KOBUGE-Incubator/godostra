@@ -1,13 +1,13 @@
 # Returns true if unit can walk on map coordinate at position pos
-func mapElemIsWalkable(pos):
+func mapElemIsWalkable(map, pos):
 	var x = pos[0]
 	var y = pos[1]
 	return map[y][x] == "0"
 
-func mapCoordIsInBounds(pos):
+func mapCoordIsInBounds(map, pos):
 	var x = pos[0]
 	var y = pos[1]
-	return x >= 0 && x < map_size_x && y >= 0 && y < map_size_y
+	return  y >= 0 && y < map.size() && x >= 0 && x < map[0].size()
 
 # Returns the ways an unit can walk (up, down etc)
 func getNeighs(pos):
@@ -18,11 +18,7 @@ func getNeighs(pos):
 func distance(a, b):
 	return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-func walkToCell(x,y):
-	var unit = get_node("units/unit_1")
-	var start = unit.cell
-	var dest = [x, y]
-
+func findPathInMap(map, start, dest):
 	# A* algorithm
 	# currently its only as fast as any common dijkstra
 	# but can use priority queue later on...
@@ -48,25 +44,30 @@ func walkToCell(x,y):
 		var ccsf = cost_so_far[cur]
 		for neigh in getNeighs(cur):
 			#print("checking ", neigh)
-			if mapCoordIsInBounds(neigh) && mapElemIsWalkable(neigh):
+			if mapCoordIsInBounds(map, neigh) && mapElemIsWalkable(map, neigh):
 				var candidate_neigh_cost = ccsf + 1
 				if !cost_so_far.has(neigh) or candidate_neigh_cost < cost_so_far[neigh]:
 					cost_so_far[neigh] = candidate_neigh_cost
 					horizon.push_back(neigh) #TODO horizon.put(neigh, distance(a, b))
-					origins[neigh] = cur
+					origins[str(neigh)] = cur
 
 	if not found_path:
 		print("could not find a way !!")
 		return
 
+	print(found_path, origins.has(dest))
+
 	# now reverse the path, and convert it into directions
 	var walk_path = []
 	var cur = dest
-	var origin = origins[cur]
+	var origin = origins[str(cur)]
 	while not (origin == null):
 		walk_path.insert(0, [cur[0] - origin[0], cur[1] - origin[1]])
 		cur = origin
-		origin = origins[cur]
+		if origins.has(str(cur)):
+			origin = origins[str(cur)]
+		else:
+			origin = null
 
 	# Finally! The resulting path can be added to the unit.
-	get_node("units/unit_1").walk = walk_path
+	return walk_path

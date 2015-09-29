@@ -21,6 +21,6 @@ func _fixed_process(delta):
 			step += 1
 			if step == walk.size():
 				walk = []
-				cell = [get_pos()[0]/32,get_pos()[1]/32]
+				cell = [floor(get_pos()[0]/32),floor(get_pos()[1]/32)]
 				step = 0
-				print("unit cell: ",cell)
+				print("unit cell: ", cell)
