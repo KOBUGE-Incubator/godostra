@@ -1,5 +1,8 @@
 extends KinematicBody2D
 
+export var health_current = 100
+export var health_max = 100
+
 var walk = []
 var moveAmount = 32
 var step = 0
@@ -15,9 +18,11 @@ func _fixed_process(delta):
 	if selected:
 		if !get_node("selection").is_visible():
 				get_node("selection").show()
+				get_tree().get_root().get_children()[0].gui_show(true)
 	else:
 		if get_node("selection").is_visible():
 				get_node("selection").hide()
+				get_tree().get_root().get_children()[0].gui_show(false)
 
 	if walk.size() > 0:
 		if moveAmount > 0:
