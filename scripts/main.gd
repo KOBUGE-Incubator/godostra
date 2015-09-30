@@ -72,11 +72,8 @@ func draw_tiles():
 		for x in range(map_size_x):
 			if map[y][x] == "0":
 				tile = p_dirt.instance()
-			else:
-				tile = p_water.instance()
-			
-			tile.set_pos(Vector2(x*tile_size+16,y*tile_size+16))
-			add_child(tile)
+				tile.set_pos(Vector2(x*tile_size+16,y*tile_size+16))
+				add_child(tile)
 
 func px_to_cell(mouse_pos):
 	mouse_x = floor((get_node("camera").get_offset()[0]+mouse_pos[0])/tile_size)
