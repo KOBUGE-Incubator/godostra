@@ -100,20 +100,22 @@ func _input(event):
 					var path = pathFinder.findPathInMap(map, unit.cell, [mouse_x, mouse_y])
 					if path != null:
 						unit.walk = path
+			command = ""
 			
 		else:
 			#check click on GUI, if not, hide GUI
-			gui_click = false
-			for element in get_node("gui").get_children():
-				gui_elm_pos_x = get_node("gui").get_offset().x+element.get_pos().x
-				gui_elm_pos_y = get_node("gui").get_offset().y+element.get_pos().y
-				if int(event.pos.x) in range(gui_elm_pos_x,gui_elm_pos_x+46)  && int(event.pos.y) in range(gui_elm_pos_y,gui_elm_pos_y+46):
-					gui_click = true
-			
-			if !gui_click:
-				gui_show(false)
-				for unit in get_tree().get_nodes_in_group("units"):
-					unit.selected = false
+			if !Input.is_action_pressed("btn_l_ctrl"):
+				gui_click = false
+				for element in get_node("gui").get_children():
+					gui_elm_pos_x = get_node("gui").get_offset().x+element.get_pos().x
+					gui_elm_pos_y = get_node("gui").get_offset().y+element.get_pos().y
+					if int(event.pos.x) in range(gui_elm_pos_x,gui_elm_pos_x+46)  && int(event.pos.y) in range(gui_elm_pos_y,gui_elm_pos_y+46):
+						gui_click = true
+				
+				if !gui_click:
+					gui_show(false)
+					for unit in get_tree().get_nodes_in_group("units"):
+						unit.selected = false
 				
 
 	elif event.type == InputEvent.MOUSE_MOTION:
