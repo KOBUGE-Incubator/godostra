@@ -27,8 +27,13 @@ func getNeighs(pos):
 		#[x,y]
 	]
 
+const D = 1
+const D2 = sqrt(2)
+
 func distance(a, b):
-	return max(abs(a[0] - b[0]), abs(a[1] - b[1]))
+	var dx = abs(a[0] - b[0])
+	var dy = abs(a[1] - b[1])
+	return D * (dx + dy) + (D2 - 2 * D) * min(dx, dy)
 
 func findPathInMap(map, start, dest):
 	if not mapCoordIsInBounds(map, dest) or not mapElemIsWalkable(map, dest) or str(start) == str(dest):
@@ -56,7 +61,7 @@ func findPathInMap(map, start, dest):
 		var ccsf = cost_so_far[cur]
 		for neigh in getNeighs(cur):
 			if mapCoordIsInBounds(map, neigh) && mapElemIsWalkable(map, neigh):
-				var candidate_neigh_cost = ccsf + 1
+				var candidate_neigh_cost = ccsf + distance(cur, neigh)
 				if !cost_so_far.has(neigh) or candidate_neigh_cost < cost_so_far[neigh]:
 					cost_so_far[neigh] = candidate_neigh_cost
 					horizon.insert(neigh, - candidate_neigh_cost - distance(neigh, dest))
