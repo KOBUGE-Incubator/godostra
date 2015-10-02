@@ -1,12 +1,18 @@
 const PriorityQueue = preload("priorityQueue.gd")
 
+var map = []
+
+func set_map(m):
+	map = m
+
 # Returns true if unit can walk on map coordinate at position pos
-func mapElemIsWalkable(map, pos):
+func mapElemIsWalkable(pos):
 	var x = pos[0]
 	var y = pos[1]
 	return map[y][x] == "0"
 
-func mapCoordIsInBounds(map, pos):
+# Check if a position in inside the map
+func mapCoordIsInBounds(pos):
 	var x = pos[0]
 	var y = pos[1]
 	return  y >= 0 && y < map.size() && x >= 0 && x < map[0].size()
@@ -35,8 +41,8 @@ func distance(a, b):
 	var dy = abs(a[1] - b[1])
 	return D * (dx + dy) + (D2 - 2 * D) * min(dx, dy)
 
-func findPathInMap(map, start, dest):
-	if not mapCoordIsInBounds(map, dest) or not mapElemIsWalkable(map, dest) or str(start) == str(dest):
+func findPathInMap(start, dest):
+	if not mapCoordIsInBounds(dest) or not mapElemIsWalkable(dest) or str(start) == str(dest):
 		return
 	
 	# A* algorithm
@@ -60,7 +66,7 @@ func findPathInMap(map, start, dest):
 
 		var ccsf = cost_so_far[cur]
 		for neigh in getNeighs(cur):
-			if mapCoordIsInBounds(map, neigh) && mapElemIsWalkable(map, neigh):
+			if mapCoordIsInBounds(neigh) && mapElemIsWalkable(neigh):
 				var candidate_neigh_cost = ccsf + distance(cur, neigh)
 				if !cost_so_far.has(neigh) or candidate_neigh_cost < cost_so_far[neigh]:
 					cost_so_far[neigh] = candidate_neigh_cost

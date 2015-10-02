@@ -1,6 +1,5 @@
 extends Node2D
 
-var file
 var map = []
 var map_size_x = 0
 var map_size_y = 0
@@ -20,6 +19,7 @@ var pathFinder = preload("res://scripts/pathFinder.gd").new()
 var command = ""
 
 func _ready():
+	load_map("res://maps/map_2.csv")
 	draw_tiles()
 	#OS.set_window_maximized(true)
 	
@@ -54,19 +54,25 @@ func add_unit(x,y):
 	unit.cell = [x,y]
 	add_child(unit)
 	
-func draw_tiles():
-	var tile
-	file = File.new()
-	file.open("res://maps/map_2.csv",1)
+func load_map(filename):
+
+	var file = File.new()
+	file.open(filename,1)
 	map_size_x = file.get_csv_line().size()
 	
 	#FIX this one pls
-	file.open("res://maps/map_2.csv",1)
-	map_size_y = file.get_as_text().split(",").size()/map_size_x+1
+	file.open(filename,1)
+	map_size_y = file.get_as_text().split(",").size() / map_size_x + 1
 	
 	for i in range(map_size_y):
 		file.seek(map_size_x*i*2)
 		map.append(file.get_csv_line())
+	
+	
+	pathFinder.set_map(map)
+	
+func draw_tiles():
+	var tile
 	
 	for y in range(map_size_y):
 		for x in range(map_size_x):
@@ -85,7 +91,7 @@ func _input(event):
 		px_to_cell(event.pos)
 		for unit in get_tree().get_nodes_in_group("units"):
 			if unit.selected && unit.walk.size() == 0:
-				var path = pathFinder.findPathInMap(map, unit.cell, [mouse_x, mouse_y])
+				var path = pathFinder.findPathInMap(unit.cell, [mouse_x, mouse_y])
 				if path != null:
 					unit.walk = path
 					
@@ -94,7 +100,7 @@ func _input(event):
 			px_to_cell(event.pos)
 			for unit in get_tree().get_nodes_in_group("units"):
 				if unit.selected:
-					var path = pathFinder.findPathInMap(map, unit.cell, [mouse_x, mouse_y])
+					var path = pathFinder.findPathInMap(unit.cell, [mouse_x, mouse_y])
 					if path != null:
 						unit.walk = path
 			command = ""
