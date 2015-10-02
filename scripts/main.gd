@@ -84,7 +84,7 @@ func _input(event):
 	if event.type == InputEvent.MOUSE_BUTTON && event.button_index == 2:
 		px_to_cell(event.pos)
 		for unit in get_tree().get_nodes_in_group("units"):
-			if unit.selected:
+			if unit.selected && unit.walk.size() == 0:
 				var path = pathFinder.findPathInMap(map, unit.cell, [mouse_x, mouse_y])
 				if path != null:
 					unit.walk = path
