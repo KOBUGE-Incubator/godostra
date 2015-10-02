@@ -15,13 +15,23 @@ func mapCoordIsInBounds(map, pos):
 func getNeighs(pos):
 	var x = pos[0]
 	var y = pos[1]
-	return [[x-1,y],[x+1,y],[x,y-1],[x,y+1]]
+	return [
+		[x-1,y],
+		[x-1,y-1],
+		[x-1,y+1],
+		[x+1,y],
+		[x+1,y-1],
+		[x+1,y+1],
+		[x,y-1],
+		[x,y+1]
+		#[x,y]
+	]
 
 func distance(a, b):
-	return abs(a[0] - b[0]) + abs(a[1] - b[1])
+	return max(abs(a[0] - b[0]), abs(a[1] - b[1]))
 
 func findPathInMap(map, start, dest):
-	if not mapCoordIsInBounds(map, dest) or not mapElemIsWalkable(map, dest):
+	if not mapCoordIsInBounds(map, dest) or not mapElemIsWalkable(map, dest) or str(start) == str(dest):
 		return
 	
 	# A* algorithm

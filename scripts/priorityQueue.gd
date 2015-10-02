@@ -11,7 +11,6 @@ func _init():
 	var init_item = HeapItem.new()
 	init_item.priority = 65535
 	heap_array.push_back(init_item)
-	
 
 func size():
 	return heap_size
