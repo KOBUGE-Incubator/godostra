@@ -26,9 +26,32 @@ func _ready():
 	gui_show(false)
 	
 	#add initial units
-	add_unit(10,3)
-	add_unit(7,4)
-	add_unit(7,8)
+	add_unit(6,8)
+	add_unit(8,8)
+	add_unit(10,8)
+	add_unit(12,8)
+	add_unit(14,8)
+	add_unit(16,8)
+	add_unit(18,8)
+	add_unit(20,8)
+	
+	add_unit(6,6)
+	add_unit(8,6)
+	add_unit(10,6)
+	add_unit(12,6)
+	add_unit(14,6)
+	add_unit(16,6)
+	add_unit(18,6)
+	add_unit(20,6)
+	
+	add_unit(6,4)
+	add_unit(8,4)
+	add_unit(10,4)
+	add_unit(12,4)
+	add_unit(14,4)
+	add_unit(16,4)
+	add_unit(18,4)
+	add_unit(20,4)
 	
 	#set camera sizes
 	get_node("camera").set_limit(MARGIN_RIGHT, map_size_x*tile_size)
