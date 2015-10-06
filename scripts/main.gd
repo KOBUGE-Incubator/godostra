@@ -52,6 +52,7 @@ func window_resized():
 func add_unit(x,y):
 	var unit = p_unit_1.instance()
 	unit.cell = [x,y]
+	unit.world = self
 	add_child(unit)
 	
 func load_map(filename):
@@ -84,17 +85,16 @@ func draw_tiles():
 func px_to_cell(mouse_pos):
 	mouse_x = floor((get_node("camera").get_offset()[0]+mouse_pos[0])/tile_size)
 	mouse_y = floor((get_node("camera").get_offset()[1]+mouse_pos[1])/tile_size)
-	print("mouse click cell: ",mouse_x,",",mouse_y)
 
 func _input(event):
+	if event.type == InputEvent.KEY && not event.is_echo() && event.is_pressed() && event.control && event.scancode == KEY_D:
+		get_node("debug").next_state()
 	if event.type == InputEvent.MOUSE_BUTTON && event.button_index == 2:
 		px_to_cell(event.pos)
 		for unit in get_tree().get_nodes_in_group("units"):
 			if unit.selected && unit.walk.size() == 0:
-				var path = pathFinder.findPathInMap(unit.cell, [mouse_x, mouse_y])
-				if path != null:
-					unit.walk = path
-					
+				unit.set_target([mouse_x, mouse_y])
+				
 	elif event.type == InputEvent.MOUSE_BUTTON && event.button_index == 1:
 		if command == "move":
 			px_to_cell(event.pos)

@@ -1,15 +1,34 @@
 const PriorityQueue = preload("priorityQueue.gd")
 
 var map = []
+var reserved = {}
 
 func set_map(m):
 	map = m
+	reserved = {}
+
+func reserve_cell(cell, id):
+	cell = str(cell)
+	if reserved.has(cell) && reserved[cell] != id:
+		return 0
+	if reserved.has(cell):
+		return 2
+	reserved[cell] = id
+	return 1
+
+func unreserve_cell(cell, id):
+	cell = str(cell)
+	if reserved.has(cell) && reserved[cell] == id:
+		reserved.erase(str(cell))
+		return true
+	return false
+
 
 # Returns true if unit can walk on map coordinate at position pos
 func mapElemIsWalkable(pos):
 	var x = pos[0]
 	var y = pos[1]
-	return map[y][x] == "0"
+	return not reserved.has(str(pos)) && map[y][x] == "0"
 
 # Check if a position in inside the map
 func mapCoordIsInBounds(pos):
@@ -76,8 +95,6 @@ func findPathInMap(start, dest):
 	if not found_path:
 		print("Could not find a way !!")
 		return
-
-	print(found_path, origins.has(dest))
 
 	# Now reverse the path, and convert it into directions
 	var walk_path = []
